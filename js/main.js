@@ -62,6 +62,8 @@
   var lightboxImage = document.getElementById('project-lightbox-image');
   var lightboxTitle = document.getElementById('project-lightbox-title');
   var lightboxLocation = document.getElementById('project-lightbox-location');
+  var lightboxIndustry = document.getElementById('project-lightbox-industry');
+  var lightboxScope = document.getElementById('project-lightbox-scope');
   var lastLightboxTrigger = null;
 
   if (!grid) return;
@@ -79,6 +81,8 @@
     lightboxImage.alt = trigger.getAttribute('data-title') + ' project reference';
     lightboxTitle.textContent = trigger.getAttribute('data-title');
     lightboxLocation.textContent = trigger.getAttribute('data-location');
+    lightboxIndustry.textContent = trigger.getAttribute('data-industry');
+    lightboxScope.textContent = trigger.getAttribute('data-scope');
     lightbox.hidden = false;
     document.body.classList.add('project-lightbox-open');
     lightbox.querySelector('.project-lightbox__close').focus();
@@ -107,7 +111,7 @@
 
     grid.innerHTML = visible.map(function (project, index) {
       return '<article class="project-card">' +
-        '<button class="project-card__visual" type="button" style="background-image:url(\'' + project.image + '\')" data-image="' + project.image + '" data-title="' + escapeText(project.name) + '" data-location="' + escapeText(project.location) + '" aria-label="Enlarge image for ' + escapeText(project.name) + '">' +
+        '<button class="project-card__visual" type="button" style="background-image:url(\'' + project.image + '\')" data-image="' + project.image + '" data-title="' + escapeText(project.name) + '" data-location="' + escapeText(project.location) + '" data-industry="' + escapeText(project.label) + '" data-scope="' + escapeText(project.scope) + '" aria-label="Enlarge image for ' + escapeText(project.name) + '">' +
           '<span class="project-card__number">REF ' + ('0' + (index + 1)).slice(-2) + '</span>' +
           '<span class="project-card__zoom"><i class="fa fa-search-plus" aria-hidden="true"></i><em>VIEW IMAGE</em></span>' +
         '</button>' +
