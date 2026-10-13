@@ -80,11 +80,30 @@
         '<div class="project-card__body">' +
           '<span class="project-card__sector">' + escapeText(project.label) + '</span>' +
           '<h4>' + escapeText(project.name) + '</h4>' +
-          '<div class="project-card__location"><i class="fa fa-map-marker" aria-hidden="true"></i>' + escapeText(project.location) + '</div>' +
-          '<p class="project-card__scope">' + escapeText(project.scope) + '</p>' +
+          '<dl class="project-card__facts">' +
+            '<div><dt>Location</dt><dd><i class="fa fa-map-marker" aria-hidden="true"></i>' + escapeText(project.location) + '</dd></div>' +
+            '<div><dt>Delivered scope</dt><dd>' + escapeText(project.scope) + '</dd></div>' +
+          '</dl>' +
+          '<button class="project-card__details-button" type="button" aria-expanded="false">VIEW REFERENCE DETAILS <i class="fa fa-plus" aria-hidden="true"></i></button>' +
+          '<div class="project-card__details" hidden>' +
+            '<div><span>Project environment</span><p>' + escapeText(project.label) + '</p></div>' +
+            '<div><span>Procurement discussion</span><p>Further technical, quality, documentation and delivery information can be reviewed against your package requirements.</p></div>' +
+            '<a href="https://mdhiglobal.com/mdhicont.html">DISCUSS A COMPARABLE PACKAGE <i class="fa fa-angle-right" aria-hidden="true"></i></a>' +
+          '</div>' +
         '</div>' +
       '</article>';
     }).join('');
+
+    grid.querySelectorAll('.project-card__details-button').forEach(function (detailButton) {
+      detailButton.addEventListener('click', function () {
+        var detailPanel = detailButton.nextElementSibling;
+        var expanded = detailButton.getAttribute('aria-expanded') === 'true';
+        detailButton.setAttribute('aria-expanded', String(!expanded));
+        detailButton.innerHTML = expanded ? 'VIEW REFERENCE DETAILS <i class="fa fa-plus" aria-hidden="true"></i>' : 'CLOSE DETAILS <i class="fa fa-minus" aria-hidden="true"></i>';
+        detailPanel.hidden = expanded;
+        detailButton.closest('.project-card').classList.toggle('is-expanded', !expanded);
+      });
+    });
 
     count.textContent = visible.length;
     description.textContent = descriptions[filter];
