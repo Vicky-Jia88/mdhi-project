@@ -58,6 +58,11 @@
   var count = document.getElementById('project-count');
   var description = document.getElementById('project-market-description');
   var buttons = document.querySelectorAll('.industry-filter__button');
+  var lightbox = document.getElementById('project-lightbox');
+  var lightboxImage = document.getElementById('project-lightbox-image');
+  var lightboxTitle = document.getElementById('project-lightbox-title');
+  var lightboxLocation = document.getElementById('project-lightbox-location');
+  var lastLightboxTrigger = null;
 
   if (!grid) return;
 
@@ -67,6 +72,34 @@
     return node.innerHTML;
   }
 
+  function openLightbox(trigger) {
+    if (!lightbox) return;
+    lastLightboxTrigger = trigger;
+    lightboxImage.src = trigger.getAttribute('data-image');
+    lightboxImage.alt = trigger.getAttribute('data-title') + ' project reference';
+    lightboxTitle.textContent = trigger.getAttribute('data-title');
+    lightboxLocation.textContent = trigger.getAttribute('data-location');
+    lightbox.hidden = false;
+    document.body.classList.add('project-lightbox-open');
+    lightbox.querySelector('.project-lightbox__close').focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox || lightbox.hidden) return;
+    lightbox.hidden = true;
+    lightboxImage.src = '';
+    document.body.classList.remove('project-lightbox-open');
+    if (lastLightboxTrigger) lastLightboxTrigger.focus();
+  }
+
+  if (lightbox) {
+    lightbox.querySelector('.project-lightbox__close').addEventListener('click', closeLightbox);
+    lightbox.querySelector('.project-lightbox__backdrop').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeLightbox();
+    });
+  }
+
   function render(filter) {
     var visible = projects.filter(function (project) {
       return filter === 'all' || project.market.split(' ').indexOf(filter) !== -1;
@@ -74,9 +107,10 @@
 
     grid.innerHTML = visible.map(function (project, index) {
       return '<article class="project-card">' +
-        '<div class="project-card__visual" style="background-image:url(\'' + project.image + '\')">' +
+        '<button class="project-card__visual" type="button" style="background-image:url(\'' + project.image + '\')" data-image="' + project.image + '" data-title="' + escapeText(project.name) + '" data-location="' + escapeText(project.location) + '" aria-label="Enlarge image for ' + escapeText(project.name) + '">' +
           '<span class="project-card__number">REF ' + ('0' + (index + 1)).slice(-2) + '</span>' +
-        '</div>' +
+          '<span class="project-card__zoom"><i class="fa fa-search-plus" aria-hidden="true"></i><em>VIEW IMAGE</em></span>' +
+        '</button>' +
         '<div class="project-card__body">' +
           '<span class="project-card__sector">' + escapeText(project.label) + '</span>' +
           '<h4>' + escapeText(project.name) + '</h4>' +
@@ -103,6 +137,10 @@
         detailPanel.hidden = expanded;
         detailButton.closest('.project-card').classList.toggle('is-expanded', !expanded);
       });
+    });
+
+    grid.querySelectorAll('.project-card__visual').forEach(function (imageButton) {
+      imageButton.addEventListener('click', function () { openLightbox(imageButton); });
     });
 
     count.textContent = visible.length;
