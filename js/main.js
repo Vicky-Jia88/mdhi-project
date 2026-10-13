@@ -110,17 +110,19 @@
     });
 
     grid.innerHTML = visible.map(function (project, index) {
-      return '<article class="project-card">' +
+      var itemId = 'project-title-' + filter + '-' + index;
+      return '<article class="project-card" itemscope itemtype="https://schema.org/CreativeWork" aria-labelledby="' + itemId + '">' +
+        '<meta itemprop="image" content="' + project.image + '">' +
         '<button class="project-card__visual" type="button" style="background-image:url(\'' + project.image + '\')" data-image="' + project.image + '" data-title="' + escapeText(project.name) + '" data-location="' + escapeText(project.location) + '" data-industry="' + escapeText(project.label) + '" data-scope="' + escapeText(project.scope) + '" aria-label="Enlarge image for ' + escapeText(project.name) + '">' +
           '<span class="project-card__number">REF ' + ('0' + (index + 1)).slice(-2) + '</span>' +
           '<span class="project-card__zoom"><i class="fa fa-search-plus" aria-hidden="true"></i><em>VIEW IMAGE</em></span>' +
         '</button>' +
         '<div class="project-card__body">' +
           '<span class="project-card__sector">' + escapeText(project.label) + '</span>' +
-          '<h4>' + escapeText(project.name) + '</h4>' +
+          '<h4 id="' + itemId + '" itemprop="name">' + escapeText(project.name) + '</h4>' +
           '<dl class="project-card__facts">' +
-            '<div><dt>Location</dt><dd><i class="fa fa-map-marker" aria-hidden="true"></i>' + escapeText(project.location) + '</dd></div>' +
-            '<div><dt>Delivered scope</dt><dd>' + escapeText(project.scope) + '</dd></div>' +
+            '<div><dt>Location</dt><dd itemprop="spatialCoverage"><i class="fa fa-map-marker" aria-hidden="true"></i>' + escapeText(project.location) + '</dd></div>' +
+            '<div><dt>Delivered scope</dt><dd itemprop="description">' + escapeText(project.scope) + '</dd></div>' +
           '</dl>' +
           '<button class="project-card__details-button" type="button" aria-expanded="false">VIEW REFERENCE DETAILS <i class="fa fa-plus" aria-hidden="true"></i></button>' +
           '<div class="project-card__details" hidden>' +
