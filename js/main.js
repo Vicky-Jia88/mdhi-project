@@ -75,7 +75,7 @@
     grid.innerHTML = visible.map(function (project, index) {
       return '<article class="project-card">' +
         '<div class="project-card__visual" style="background-image:url(\'' + project.image + '\')">' +
-          '<span class="project-card__number">REF ' + String(index + 1).padStart(2, '0') + '</span>' +
+          '<span class="project-card__number">REF ' + ('0' + (index + 1)).slice(-2) + '</span>' +
         '</div>' +
         '<div class="project-card__body">' +
           '<span class="project-card__sector">' + escapeText(project.label) + '</span>' +
@@ -93,7 +93,9 @@
   buttons.forEach(function (button) {
     button.addEventListener('click', function () {
       buttons.forEach(function (item) { item.classList.remove('is-active'); });
+      buttons.forEach(function (item) { item.setAttribute('aria-pressed', 'false'); });
       button.classList.add('is-active');
+      button.setAttribute('aria-pressed', 'true');
       render(button.getAttribute('data-filter'));
     });
   });
